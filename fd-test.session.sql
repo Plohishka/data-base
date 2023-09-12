@@ -86,4 +86,9 @@ CREATE TABLE orders(
 INSERT INTO orders (customer_id) VALUES
 (3), (3), (4), (3), (5);
 
-
+CREATE TABLE orders_to_products(
+    product_id int REFERENCES products(id),
+    order_id int REFERENCES orders(id),
+    quantity int CHECK (quantity > 0),
+    PRIMARY KEY (product_id, order_id)
+);
