@@ -127,3 +127,37 @@ INSERT INTO messages (body, author_id, chat_id) VALUES
 ('Hey', 4, 5),
 ('So', 5, 5);
 
+
+/* CONTENT */
+
+CREATE TABLE contents (
+    id serial PRIMARY KEY,
+    name varchar(256) NOT NULL CHECK (name != ''),
+    description text,
+    created_at timestamp DEFAULT current_timestamp
+);
+
+CREATE TABLE reactions (
+    content_id int REFERENCES contents(id),
+    user_id int REFERENCES users(id),
+    reaction boolean,
+    PRIMARY KEY (content_id, user_id)
+);
+
+
+
+/* Team - coach */
+
+CREATE TABLE coaches (
+    id serial PRIMARY KEY,
+    name varchar(300)
+);
+
+CREATE TABLE teams (
+    id serial PRIMARY KEY,
+    name varchar(300),
+    coach_id int REFERENCES coaches(id)
+);
+
+ALTER TABLE coaches
+ADD COLUMN team_id int REFERENCES teams(id);
