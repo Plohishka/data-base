@@ -66,7 +66,6 @@ VALUES
 ('iPhone', 500, 1),
 ('Sony', 200, 3);
 
-
 CREATE TABLE orders(
     id serial PRIMARY KEY,
     created_at timestamp DEFAULT current_timestamp,
@@ -108,11 +107,11 @@ CREATE TABLE chats (
     created_at timestamp NOT NULL CHECK (created_at <= current_timestamp) DEFAULT current_timestamp
 );
 
-
+DROP TABLE chats_to_users;
 
 CREATE TABLE chats_to_users (
     chat_id int REFERENCES chats(id),
-    user_id int REFERENCES users(id),
+    user_id int REFERENCES users(id) ON DELETE CASCADE,
     PRIMARY KEY (chat_id, user_id)
 );
 
@@ -161,3 +160,14 @@ CREATE TABLE teams (
 
 ALTER TABLE coaches
 ADD COLUMN team_id int REFERENCES teams(id);
+
+
+UPDATE users
+SET weight = 60
+WHERE birthday > '1990-01-01';
+
+DELETE FROM users
+WHERE id = 5;
+
+SELECT * FROM users
+WHERE birthday > '1998-01-01';
