@@ -1,15 +1,5 @@
-const {Client} = require('pg');
-const {mapUsers} = require('./utils/mapUsers');
-
-const configs = {
-    host: 'localhost',
-    port: 5432,
-    user: 'postgres',
-    password: '240221',
-    database: 'fd_test'
-}
-
-const client = new Client(configs);
+const { User } = require('./models/index');
+const { getUsers } = require('./api/index');
 
 const users = [
     {
@@ -41,8 +31,10 @@ const users = [
 
 async function start() {
     await client.connect();
-    const {rows} = await client.query(`INSERT INTO users (first_name, last_name, email) VALUES ${mapUsers(users)};`);
-    console.log(rows);
+
+    const usersArray = await getUsers();
+
+    const { rows } = await User.bulkCreate(usersArray);
     await client.end();
 }
 

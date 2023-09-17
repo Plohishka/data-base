@@ -20,6 +20,10 @@ CREATE TABLE users (
     gender varchar(100) CHECK (first_name != '')
 );
 
+ALTER TABLE users
+DROP CONSTRAINT users_email_key;
+
+
 ALTER TABLE users 
 ADD COLUMN height numeric(3,2);
 
@@ -29,6 +33,9 @@ ADD COLUMN weight numeric(5,2) CHECK (weight > 0);
 ALTER TABLE users
 ADD CONSTRAINT "early_date" CHECK (birthday > '1990-01-01');
 
+ALTER TABLE users
+DROP CONSTRAINT "early_date";
+
 ALTER TABLE users 
 ADD CONSTRAINT "to_high_user" CHECK (height <= 4.0);
 
@@ -37,6 +44,9 @@ DROP COLUMN weight;
 
 ALTER TABLE users
 DROP CONSTRAINT "to_high_user";
+
+DELETE FROM users
+WHERE id > 10;
 
 INSERT INTO users (first_name, last_name, email, birthday, gender, height, weight) VALUES 
 ('Clark', 'Kent', 'super@man.com', '2022-09-09', 'male', '2.04', '75'),
@@ -171,3 +181,6 @@ WHERE id = 5;
 
 SELECT * FROM users
 WHERE birthday > '1998-01-01';
+
+ALTER TABLE users
+ADD COLUMN is_subscribe boolean;
