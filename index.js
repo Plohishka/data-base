@@ -1,6 +1,6 @@
 const { client, User, Phone, Order } = require('./models/index');
 const { getUsers } = require('./api/index');
-const {generatePhones} = require('./utils/generate');
+const { generatePhones } = require('./utils/generate');
 
 const users = [
     {
@@ -36,8 +36,8 @@ async function start() {
     const usersArray = await getUsers();
 
     // const { rows } = await User.bulkCreate(usersArray);
-    const {rows: users} = await User.findAll();
-    const phones = await Phone.bulkCreate(generatePhones(100));
+    const { rows: users } = await User.findAll();
+    const { rows: phones } = await Phone.findAll();
     const orders = await Order.bulkCreate(users, phones);
 
     await client.end();

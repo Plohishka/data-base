@@ -76,6 +76,16 @@ VALUES
 ('iPhone', 500, 1),
 ('Sony', 200, 3);
 
+ALTER TABLE products
+ADD COLUMN model varchar(200);
+
+ALTER TABLE products
+RENAME COLUMN name TO brand;
+
+DELETE FROM orders_to_products;
+
+DELETE FROM products;
+
 CREATE TABLE orders(
     id serial PRIMARY KEY,
     created_at timestamp DEFAULT current_timestamp,
