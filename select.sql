@@ -30,6 +30,8 @@ WHERE id > 1500 AND id < 1800;
 SELECT * FROM users
 WHERE id BETWEEN 1500 AND 1800;
 
+
+
 SELECT * FROM users
 WHERE first_name LIKE 'K%';
 
@@ -46,6 +48,9 @@ WHERE id BETWEEN 1420 AND 1470;
 UPDATE users
 SET weight = 70
 WHERE id % 5 = 0;
+
+
+
 
 SELECT first_name, extract("years" from age(birthday)) FROM users;
 
@@ -72,3 +77,6 @@ SET weight = 80
 WHERE gender = 'male' AND (extract("years" from age(birthday)) BETWEEN 30 AND 50);
 
 
+
+SELECT * FROM users AS u
+WHERE u.id = 1500;
