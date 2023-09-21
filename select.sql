@@ -80,3 +80,19 @@ WHERE gender = 'male' AND (extract("years" from age(birthday)) BETWEEN 30 AND 50
 
 SELECT * FROM users AS u
 WHERE u.id = 1500;
+
+---  pagination ---
+
+SELECT *
+FROM users
+LIMIT 10;
+
+
+SELECT * FROM users
+LIMIT 10 
+OFFSET 10;
+
+
+SELECT * FROM orders
+LIMIT 50
+OFFSET 100;

@@ -194,3 +194,4 @@ WHERE birthday > '1998-01-01';
 
 ALTER TABLE users
 ADD COLUMN is_subscribe boolean;
+
