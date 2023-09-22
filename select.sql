@@ -116,3 +116,140 @@ SELECT * FROM (
 ) AS fn 
 WHERE char_length(fn.full_name) > 10;
 
+----------------------------------------------
+
+CREATE TABLE workers (
+    id serial PRIMARY KEY,
+    name varchar(256) NOT NULL CHECK (name != ''),
+    salary numeric(10,2) NOT NULL CHECK (salary > 0),
+    birthday date CHECK (birthday < current_date)
+);
+
+INSERT INTO workers (name, birthday, salary) VALUES
+('Oleg', '1990-01-01', 300);
+
+INSERT INTO workers (name, salary) VALUES
+('Yaroslava', 1200);
+
+INSERT INTO workers (name, birthday, salary) VALUES
+('Sasha', '1985-05-25', 1000),
+('Masha', '1995-11-08', 900);
+
+UPDATE workers
+SET salary = 500
+WHERE name = 'Oleg' AND birthday = '1990-01-01';
+
+UPDATE workers
+SET salary = 700
+WHERE salary > 500;
+
+UPDATE workers
+SET birthday = '1999-01-01'
+WHERE id BETWEEN 2 AND 5;
+
+UPDATE workers
+SET name = 'Zhenya', salary = 900
+WHERE name = 'Sasha';
+
+SELECT * FROM workers
+WHERE salary > 400;
+
+SELECT * FROM workers
+WHERE id = 4;
+
+SELECT salary, extract("years" from age(birthday)) FROM workers
+WHERE name = 'Zhenya';
+
+SELECT * FROM workers
+WHERE name = 'Petya';
+
+SELECT * FROM workers
+WHERE extract("years" from age(birthday)) = 27 OR salary > 800;
+
+SELECT * FROM workers
+WHERE extract("years" from age(birthday)) BETWEEN 25 AND 35; 
+
+SELECT * FROM workers
+WHERE extract("month" from birthday) = 1; 
+
+DELETE FROM workers
+WHERE id = 4;
+
+DELETE FROM workers
+WHERE name = 'Oleg';
+
+DELETE FROM workers
+WHERE extract("years" from age(birthday)) > 30;
+
+SELECT * FROM workers;
+
+
+-----------------------------------
+
+SELECT max(height)
+FROM users;
+
+SELECT avg(height)
+FROM users;
+
+SELECT count(*)
+FROM users  
+WHERE gender = 'female';
+
+SELECT avg(weight)
+FROM users
+WHERE gender = 'male';
+
+SELECT avg(weight), gender
+FROM users
+GROUP BY gender;
+
+SELECT avg(weight)
+FROM users
+WHERE birthday > '2000-01-01';
+
+SELECT avg(weight), gender
+FROM users
+WHERE extract('year' from age(birthday)) > 25
+GROUP BY gender;
+
+---
+
+SELECT avg(extract('year' from age(birthday)))
+FROM users;
+
+SELECT max(extract('year' from age(birthday))), min(extract('year' from age(birthday))), gender
+FROM users
+GROUP BY gender;
+
+SELECT count(*)
+FROM users
+WHERE birthday > '1999-01-01';
+
+SELECT count(*)
+FROM users
+WHERE first_name ILIKE 'WILLIAM';
+
+SELECT count(*) 
+FROM users
+WHERE extract('year' from age(birthday)) BETWEEN 20 AND 30;
+
+SELECT count(*)
+FROM users
+WHERE height > 1.5;
+
+SELECT count(*), customer_id
+FROM orders
+GROUP BY customer_id;
+
+SELECT avg(price), brand
+FROM products
+GROUP BY brand;
+
+SELECT sum(quantity)
+FROM products;
+
+SELECT sum(quantity)
+FROM orders_to_products;
+
+
