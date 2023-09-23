@@ -307,4 +307,84 @@ HAVING sum(quantity) > 50000
 ORDER BY sum(quantity);
 
 
+----------------///////////////////////////---------------------------
+
+CREATE TABLE a 
+(
+    v varchar(3),
+    t int
+);
+
+CREATE TABLE b (
+    v varchar(3)
+);
+
+INSERT INTO a VALUES
+('XXX', 1), ('XXY', 1), ('XXZ', 1),
+('XYX', 2), ('XYY', 2), ('XYZ', 2),
+('YXX', 3), ('YXY', 3), ('YXZ', 3);
+
+INSERT INTO b VALUES
+('ZXX'), ('XXX'), ('ZXZ'), ('YXZ'), ('YXY');
+
+---UNION---------
+
+SELECT v FROM a UNION
+SELECT * FROM b;
+
+---INTERSECT------------
+
+SELECT v FROM a
+INTERSECT
+SELECT * FROM b;
+
+------EXCEPT---------------
+
+SELECT v FROM a
+EXCEPT
+SELECT * FROM b;
+
+-------------------------------------
+
+INSERT INTO users (first_name, last_name, email, birthday, gender) VALUES 
+('Tester1', 'Tester1', 'test@test', '1990-02-02', 'male'),
+('Tester2', 'Tester2', 'test2@test', '1990-02-02', 'male'),
+('Tester3', 'Tester3', 'test3@test', '1990-02-02', 'male');
+
+SELECT * FROM users
+ORDER BY users DESC;
+
+SELECT id FROM users INTERSECT
+SELECT customer_id FROM orders;
+
+SELECT id FROM users
+EXCEPT
+SELECT customer_id FROM orders;
+
+---------JOIN---------------
+
+SELECT * FROM a, b
+WHERE a.v = b.v;
+
+SELECT a.v AS "id", a.t AS "price", b.v AS "fone_id"
+FROM a, b
+WHERE a.v = b.v;
+
+SELECT * 
+FROM a JOIN b ON a.v = b.v;
+
+SELECT u.*, o.id AS order_id 
+FROM users AS u 
+JOIN orders AS o
+ON o.customer_id = u.id
+WHERE u.id = 1865;
+
+SELECT p.brand, p.model, otp.order_id
+FROM products AS p
+JOIN orders_to_products AS otp
+ON p.id = otp.order_id
+WHERE otp.order_id = 11;
+
+
+
 
