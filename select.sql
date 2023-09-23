@@ -253,3 +253,58 @@ SELECT sum(quantity)
 FROM orders_to_products;
 
 
+----------------------------
+
+SELECT * FROM users
+ORDER BY id ASC;
+
+SELECT * FROM users
+ORDER BY id DESC;
+
+SELECT * FROM users
+ORDER BY first_name ASC;
+
+SELECT * FROM users
+ORDER BY height, birthday;
+
+SELECT * FROM products
+ORDER BY quantity;
+
+SELECT * FROM products
+ORDER BY price DESC
+LIMIT 5;
+
+----------------
+
+SELECT *, extract('years' from age(birthday)) FROM users
+ORDER BY extract('years' from age(birthday)), first_name DESC;
+
+SELECT * FROM (
+    SELECT *, extract('years' from age(birthday)) AS age
+    FROM users
+) AS u_w_age
+ORDER BY u_w_age.age, first_name DESC;
+
+SELECT * FROM products
+ORDER BY price;
+
+
+SELECT extract('years' from age(birthday)), count(*)
+FROM users
+GROUP BY extract('years' from age(birthday))
+ORDER BY extract('years' from age(birthday));
+
+SELECT count(*), age FROM (
+    SELECT *,  extract('years' from age(birthday)) AS age FROM users 
+) AS u_w_age
+GROUP BY age
+HAVING count(*) >= 5
+ORDER BY age;
+
+SELECT sum(quantity), brand FROM products
+GROUP BY brand
+HAVING sum(quantity) > 50000
+ORDER BY sum(quantity);
+
+
+
