@@ -385,6 +385,177 @@ JOIN orders_to_products AS otp
 ON p.id = otp.order_id
 WHERE otp.order_id = 11;
 
+-----------LEFT JOIN-----------
+
+SELECT u.id, email, o.id AS order_id 
+FROM users AS u 
+LEFT JOIN orders AS o
+ON o.customer_id = u.id
+WHERE o.id IS NULL;
+
+----------//////////////--------
+
+SELECT p.model, count(*) AS amount
+FROM orders_to_products AS otp
+JOIN products AS p
+ON p.id = otp.product_id
+WHERE brand = 'Samsung'
+GROUP BY p.model;
+
+
+----------//////////----------
+
+SELECT email
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+JOIN products AS p
+ON otp.product_id = p.id
+WHERE p.model = '10 model 32';
+
+---------///////////-----------
+
+SELECT otp.order_id, sum(otp.quantity*p.price)
+FROM orders_to_products AS otp
+JOIN products AS p
+ON otp.product_id = p.id
+GROUP BY otp.order_id
+ORDER BY otp.order_id;
+
+-----------1/////////----------
+
+SELECT otp.order_id, p.brand
+FROM orders_to_products AS otp
+JOIN products AS p
+ON otp.product_id = p.id
+WHERE p.brand = 'Samsung';
+
+---------2//////////-------------
+
+SELECT u.email, count(*)
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+GROUP BY u.id;
+
+----------3////////----------
+
+SELECT o.id, count(*)
+FROM orders AS o
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+GROUP BY o.id;
+
+----------4///////////-------------
+
+SELECT p.brand, p.model, sum(otp.quantity) AS mount
+FROM orders_to_products AS otp
+JOIN products AS p
+ON otp.product_id = p.id
+GROUP BY p.brand, p.model
+ORDER BY mount DESC
+LIMIT 1;
+
+
+----1
+
+SELECT avg(o_w_sum.order_sum)
+FROM (
+    SELECT otp.order_id, sum(otp.quantity*p.price) AS order_sum
+    FROM orders_to_products AS otp
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY otp.order_id
+    ) AS o_w_sum;
+
+--2
+
+SELECT u.*, sum(otp.quantity*p.price) AS total_price
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+JOIN products AS p
+ON otp.product_id = p.id
+GROUP BY u.id
+ORDER BY total_price DESC
+LIMIT 1;
+
+---3
+
+SELECT p.brand, sum(otp.quantity) AS amount
+FROM orders_to_products AS otp
+JOIN products AS p
+ON otp.product_id = p.id
+GROUP BY p.brand
+ORDER BY amount DESC
+LIMIT 1;
+
+---4
+
+WITH orders_with_costs AS (
+    SELECT otp.order_id, sum(otp.quantity*p.price) AS order_sum
+    FROM orders_to_products AS otp
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY otp.order_id
+    )
+SELECT owc.*
+FROM orders_with_costs AS owc
+WHERE owc.order_sum > (SELECT avg(o_w_sum.order_sum)
+FROM (
+    SELECT otp.order_id, sum(otp.quantity*p.price) AS order_sum
+    FROM orders_to_products AS otp
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY otp.order_id
+    ) AS o_w_sum);    
+ 
+---5
+ 
+
+WITH users_with_costs AS (
+    SELECT u.*, sum(otp.quantity*p.price) AS order_sum
+    FROM users AS u
+    JOIN orders AS o
+    ON u.id = o.customer_id
+    JOIN orders_to_products AS otp
+    ON o.id = otp.order_id
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY u.id
+    )
+SELECT uwc.*
+FROM users_with_costs AS uwc
+WHERE uwc.order_sum > (SELECT avg(o_w_sum.order_sum)
+FROM (
+    SELECT otp.order_id, sum(otp.quantity*p.price) AS order_sum
+    FROM orders_to_products AS otp
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY otp.order_id
+    ) AS o_w_sum);    
+
+
+---6
+
+    SELECT u.*, sum(otp.quantity)
+    FROM users AS u
+    JOIN orders AS o
+    ON u.id = o.customer_id
+    JOIN orders_to_products AS otp
+    ON o.id = otp.order_id
+    JOIN products AS p
+    ON otp.product_id = p.id
+    GROUP BY u.id;
+
+    
+
+
+
 
 
 
