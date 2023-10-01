@@ -542,17 +542,18 @@ FROM (
 
 ---6
 
-    SELECT u.*, sum(otp.quantity)
+    SELECT u.*, count(otp.product_id)
     FROM users AS u
     JOIN orders AS o
     ON u.id = o.customer_id
     JOIN orders_to_products AS otp
     ON o.id = otp.order_id
-    JOIN products AS p
-    ON otp.product_id = p.id
     GROUP BY u.id;
 
-    
+
+----------------------------------------
+
+
 
 
 
