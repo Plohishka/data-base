@@ -99,6 +99,59 @@ JOIN orders AS o
 ON u.id = o.customer_id
 GROUP BY u.id, u.email;
 
+-------------COALESCE---------------
+
+SELECT id, brand, model, price, COALESCE(category, 'smartphone') AS category
+FROM products;
+
+---------GREATEST, LEAST-----------
+
+SELECT *, LEAST(price, 500) sale_price
+FROM products;
+
+SELECT *, GREATEST(price, 500) new_price
+FROM products;
+
+
+--------------IN, NOT IN, SOME/ANY, EXISTS----------
+
+SELECT *
+FROM users AS u
+WHERE u.id NOT IN (
+    SELECT o.customer_id
+    FROM orders AS o
+);
+
+SELECT *
+FROM products AS p
+WHERE p.id NOT IN (
+    SELECT otp.product_id
+    FROM orders_to_products AS otp
+);
+
+------EXISTS-------
+
+SELECT *
+FROM users
+WHERE id = 290;
+
+SELECT EXISTS
+    (SELECT *
+    FROM users
+    WHERE id = 290);
+
+
+SELECT EXISTS (
+    SELECT o.customer_id
+    FROM orders AS o
+    WHERE id = 1500
+); 
+
+SELECT u.id, u.email, (EXISTS (
+    SELECT o.customer_id
+    FROM orders AS o))
+FROM users AS u;    
+
 
 
 
