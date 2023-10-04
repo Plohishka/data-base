@@ -154,6 +154,208 @@ FROM users AS u;
 
 
 
+------------VIEW---------------
+
+SELECT u.*, count(*) AS order_count
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+GROUP BY u.id, u.email;
+
+CREATE VIEW users_with_order_count AS (SELECT u.*, count(*) AS order_count
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+GROUP BY u.id, u.email);
+
+SELECT *
+FROM users_with_order_count;
+
+
+-----------------
+
+SELECT o.*, sum(p.price*otp.quantity), count(otp.product_id)
+FROM orders AS o
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+JOIN products AS p
+ON otp.product_id = p.id
+GROUP BY o.id;
+
+
+CREATE VIEW orders_with_price_quantity AS (
+    SELECT o.*, sum(p.price*otp.quantity), count(otp.product_id)
+FROM orders AS o
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+JOIN products AS p
+ON otp.product_id = p.id
+GROUP BY o.id
+);
+
+SELECT *
+FROM orders_with_price_quantity;
+
+SELECT u.*, sum(owpq.sum)
+FROM users AS u
+JOIN orders_with_price_quantity AS owpq
+ON u.id = owpq.customer_id
+GROUP BY u.id;
+
+
+CREATE VIEW full_name_with_order_sum AS (
+SELECT u.id, concat(first_name, ' ', last_name) AS full_name, u.email, sum(owpq.sum)
+FROM users AS u
+JOIN orders_with_price_quantity AS owpq
+ON u.id = owpq.customer_id
+GROUP BY u.id);
+
+SELECT *
+FROM full_name_with_order_sum;
+
+
+
+-------------1-----------
+
+CREATE VIEW users_with_sum_orders AS (
+    SELECT u.*, sum(owpq.sum)
+FROM users AS u
+JOIN orders_with_price_quantity AS owpq
+ON u.id = owpq.customer_id
+GROUP BY u.id
+);
+
+SELECT *
+FROM users_with_sum_orders AS uwso
+ORDER BY sum DESC
+LIMIT 10;
+
+
+------------2------------
+
+CREATE VIEW users_max_orders AS (
+    SELECT u.*, sum(otp.quantity) AS sum_orders
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+JOIN products AS p
+ON otp.order_id = p.id
+GROUP BY u.id, otp.quantity
+ORDER BY sum_orders DESC
+LIMIT 10
+);
+
+SELECT *
+FROM users_max_orders;
+
+
+----------3----------------
+
+SELECT u.*, count(otp.order_id)*otp.quantity AS total_orders
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+GROUP BY o.id, u.id, otp.quantity;
+
+CREATE VIEW users_with_many_orders AS (
+    SELECT u.*, count(otp.order_id)*otp.quantity AS total_orders
+FROM users AS u
+JOIN orders AS o
+ON u.id = o.customer_id
+JOIN orders_to_products AS otp
+ON o.id = otp.order_id
+GROUP BY o.id, u.id, otp.quantity
+)
+
+SELECT avg(total_orders) AS average
+FROM users_with_many_orders AS uwmo;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -181,7 +181,6 @@ CREATE TABLE teams (
 ALTER TABLE coaches
 ADD COLUMN team_id int REFERENCES teams(id);
 
-
 UPDATE users
 SET weight = 60
 WHERE birthday > '1990-01-01';
